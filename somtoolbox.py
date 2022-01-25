@@ -35,9 +35,10 @@ from visualizations.metromap import MetroMap
 from visualizations.piechart import PieChart
 from visualizations.chessboard import Chessboard
 from visualizations.time_series import TimeSeries
+from visualizations.sky_metaphor import SkyMetaphor
 from skimage.transform import resize
 
-OBJECTS_CLASSES = [ComponentPlane, HitHist, UMatrix, DMatrix, UStar_PMatrix, 
+OBJECTS_CLASSES = [SkyMetaphor, ComponentPlane, HitHist, UMatrix, DMatrix, UStar_PMatrix,
                    SDH, PieChart, NeighbourhoodGraph, Chessboard, Clustering, 
                    MetroMap, QError, TimeSeries]
 
@@ -52,7 +53,7 @@ _COLOURS_93 = ['#FF5555','#5555FF','#55FF55','#FFFF55','#FF55FF','#55FFFF','#FFA
               '#80FF80','#FFFF80','#FF80FF','#80FFFF','#FF5555','#5555FF','#55FF55','#FFFF55',
               '#FF55FF','#55FFFF','#FFAFAF','#808080','#C00000','#0000C0','#00C000','#C0C000',
               '#C000C0','#00C0C0','#404040','#FF4040','#4040FF','#40FF40','#FFFF40','#FF40FF',
-              '#40FFFF','#C0C0C0','#800000','#000080']
+              '#40FFFF','#C0C0C0','#800000','#000080','#000000','#FFFFFF']
 
 class SOMToolbox():
 
@@ -76,7 +77,7 @@ class SOMToolbox():
         self._component_names = component_names
 
         self._plot = None
-        self._maincontrol = MainController(self._interpolation, self._rotate, self._visualizations, OBJECTS_CLASSES, name='')
+        self._maincontrol = MainController(self._interpolation, self._rotate, self._visualizations, OBJECTS_CLASSES, name='', colormap='Greys')
         self._mainp = pn.Column(pn.panel(self._maincontrol, default_layout=pn.Row, width=700))
 
         self._xlim = (-.5*self._m/self._n,.5*self._m/self._n) if self._m>self._n else (-.5,.5)
@@ -91,7 +92,8 @@ class SOMToolbox():
         self._controls = pn.Row()
         self._timeseries = pn.Row()
         self._mainview = pn.Column(pn.Column(self._mainp, pn.Row(self._pdmap, self._controls)), pn.Column(self._timeseries))
-       
+
+        self._visualizations.append(SkyMetaphor(self))
         self._visualizations.append(ComponentPlane(self))
         if input_data is not None: self._visualizations.append(HitHist(self))
         self._visualizations.append(UMatrix(self))

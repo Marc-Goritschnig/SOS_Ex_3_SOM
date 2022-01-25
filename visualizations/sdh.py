@@ -30,8 +30,7 @@ class SDH(VisualizationInterface):
         for vector in self._main._idata:
             dist = np.sqrt(np.sum(np.power(self._main._weights - vector, 2), axis=1))
             c = heapq.nsmallest(factor, range(len(dist)), key=dist.__getitem__)
-            print(c)
-            if (approach==0): 
+            if (approach==0):
                 for j in range(factor):  sdh_m[c[j]] += (factor-j)/cs # normalized
                 self._main._controls[0][1].object = self._reference[0]
             if (approach==1):

@@ -2,10 +2,10 @@ import param
 import numpy as np
 from bokeh.palettes import Greys256
 
-OBJECTS_ALL = {'Component Planes': 0, 'Hit Histogram': 1, 'U-matrix': 2, 'D-Matrix': 3,  
-               'P-matrix & U*-matrix': 4, 'Smoothed Data Histograms': 5, 'Pie Chart': 6, 
-               'Neighbourhood Graph': 7, 'Chessboard': 8, 'Clustering': 9, 'Metro Map': 10, 
-               'Quantization Error': 11,  'Time Series': 12} 
+OBJECTS_ALL = {'Sky Metaphor': 0, 'Component Planes': 1, 'Hit Histogram': 2, 'U-matrix': 3, 'D-Matrix': 4,
+               'P-matrix & U*-matrix': 5, 'Smoothed Data Histograms': 6, 'Pie Chart': 7,
+               'Neighbourhood Graph': 8, 'Chessboard': 9, 'Clustering': 10, 'Metro Map': 11,
+               'Quantization Error': 12,  'Time Series': 13}
 
 _COLOURS_93 = ['#FF5555','#5555FF','#55FF55','#FFFF55','#FF55FF','#55FFFF','#FFAFAF','#808080',
               '#C00000','#0000C0','#00C000','#C0C000','#C000C0','#00C0C0','#404040','#FF4040',
@@ -18,7 +18,7 @@ _COLOURS_93 = ['#FF5555','#5555FF','#55FF55','#FFFF55','#FF55FF','#55FFFF','#FFA
               '#80FF80','#FFFF80','#FF80FF','#80FFFF','#FF5555','#5555FF','#55FF55','#FFFF55',
               '#FF55FF','#55FFFF','#FFAFAF','#808080','#C00000','#0000C0','#00C000','#C0C000',
               '#C000C0','#00C0C0','#404040','#FF4040','#4040FF','#40FF40','#FFFF40','#FF40FF',
-              '#40FFFF','#C0C0C0','#800000','#000080']
+              '#40FFFF','#C0C0C0','#800000','#000080','#000000','#FFFFFF']
 
 PALETTES = ['PiYG', 'PRGn', 'BrBG', 'PuOr', 'RdGy', 'RdBu', 'RdYlBu', 'RdYlGn', 'Spectral',
            'coolwarm', 'bwr', 'seismic', 'gist_gray', 'bone', 'pink', 'spring', 'summer',
@@ -237,20 +237,35 @@ class MetroMapController(param.Parameterized):
     def _change_water_level(self,):
         self.water_level = [0, self.level, 1]
 
+
 class ChessboardController(param.Parameterized):
-
-    chessboard    = param.Boolean(True, label='Chessboard')
+    chessboard = param.Boolean(True, label='Chessboard')
     voronoi_lines = param.Boolean(True, label='Voronoi lines')
-    high_dpi      = param.Boolean(False, label='High DPI')
+    high_dpi = param.Boolean(False, label='High DPI')
 
-    def __init__(self, calculate,  **params):
+    def __init__(self, calculate, **params):
         super(ChessboardController, self).__init__(**params)
         self._calculate = calculate
 
     @param.depends("chessboard", "voronoi_lines", "high_dpi", watch=True)
-    def _change_parameters(self,):
+    def _change_parameters(self, ):
         self._calculate()
-        
+
+
+class SkyMetaphorController(param.Parameterized):
+    sky_metaphor = param.Boolean(True, label='SkyMetaphor')
+    voronoi_lines = param.Boolean(True, label='Voronoi lines')
+    high_dpi = param.Boolean(False, label='High DPI')
+
+    def __init__(self, calculate, **params):
+        super(SkyMetaphorController, self).__init__(**params)
+        self._calculate = calculate
+
+    @param.depends("sky_metaphor", "voronoi_lines", "high_dpi", watch=True)
+    def _change_parameters(self, ):
+        self._calculate()
+
+
 class TimeSeriesController(param.Parameterized):
     
     window_size = param.Integer(10,  bounds=(1, None))
