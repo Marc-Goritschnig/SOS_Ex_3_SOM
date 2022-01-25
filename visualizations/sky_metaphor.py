@@ -25,8 +25,8 @@ class SkyMetaphor(VisualizationInterface):
     def _calculate(self, ):
         # density per unit
         dpu = 20
-        width = self._main._m * dpu
-        height = self._main._n * dpu
+        height = self._main._m * dpu
+        width = self._main._n * dpu
         k = 4
         lam = 0.25
         scale_matrix = np.array([dpu, dpu])
@@ -34,7 +34,7 @@ class SkyMetaphor(VisualizationInterface):
         for vector in self._main._idata:
             dists = np.sqrt(np.sum(np.power(self._main._weights - vector, 2), axis=1))
             idxs = np.argsort(dists)
-            idxs2 = np.array(list(map(lambda a: (int(a % self._main._m), int(a / self._main._m)), idxs)))
+            idxs2 = np.array(list(map(lambda a: (int(a % self._main._n), int(a / self._main._n)), idxs)))
             best_dists = dists[idxs[0:k]]
             ui = idxs2[1:k]
             u1 = idxs2[0]
@@ -59,13 +59,14 @@ class SkyMetaphor(VisualizationInterface):
             position[1] = position[1] + u1[1] * dpu
             x = int(position[0] + dpu/2.0)
             y = int(position[1] + dpu/2.0)
-            stars[y, x] = 1
+            stars[x, y] = 1
 
         res = self.sdh(4, 2)
         res = scipy.ndimage.zoom(res, dpu, order=2)
         res = np.array(res)
         res = res / np.max(res)
         #res[res > 1] = 1
+        stars = stars.transpose()
         res *= 0.6
         res = 1 - res
         res[stars == 1] = 0
