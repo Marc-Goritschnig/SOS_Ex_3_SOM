@@ -1,9 +1,9 @@
+import numpy as np
 from visualizations.iVisualization import VisualizationInterface
 from scipy.spatial import Voronoi
 from skimage.draw import polygon
 from controls.controllers import SkyMetaphorController
 import holoviews as hv
-import numpy as np
 import panel as pn
 import scipy.ndimage
 
@@ -17,18 +17,17 @@ class SkyMetaphor(VisualizationInterface):
     def _activate_controllers(self, ):
         reference = pn.pane.Str("<ul><li><b>Title</b> Text</li></ul>")
         self._main._controls.append(pn.Column(self._controls, reference))
-        self._calculate()
+        self._calculate(self._controls.smooth_factor, self._controls.pull_force)
 
     def _deactivate_controllers(self, ):
         self._main._pipe_paths.send([])
 
-    def _calculate(self, ):
+    def _calculate(self, smooth_factor=4, lam=0.25):
         # density per unit
         dpu = 20
         height = self._main._m * dpu
         width = self._main._n * dpu
         k = 4
-        lam = 0.25
         scale_matrix = np.array([dpu, dpu])
         stars = np.zeros((width, height))
         for vector in self._main._idata:
@@ -57,15 +56,15 @@ class SkyMetaphor(VisualizationInterface):
 
             position[0] = position[0] + u1[0] * dpu
             position[1] = position[1] + u1[1] * dpu
-            x = int(position[0] + dpu/2.0)
-            y = int(position[1] + dpu/2.0)
+            x = int(position[0] + dpu / 2.0)
+            y = int(position[1] + dpu / 2.0)
             stars[x, y] = 1
 
-        res = self.sdh(4, 2)
+        res = self.sdh(smooth_factor, 2)
         res = scipy.ndimage.zoom(res, dpu, order=2)
         res = np.array(res)
         res = res / np.max(res)
-        #res[res > 1] = 1
+        # res[res > 1] = 1
         stars = stars.transpose()
         res *= 0.6
         res = 1 - res
