@@ -60,7 +60,6 @@ _COLOURS_93 = ['#FF5555', '#5555FF', '#55FF55', '#FFFF55', '#FF55FF', '#55FFFF',
 class SOMToolbox():
 
     def __init__(self, m, n, dimension, weights, input_data=None, classes=None, component_names=None):
-        print("hello")
         self._height = self._width = 500
         self._pipe = Pipe(data=[])
         self._pipe_paths = Pipe(data=[])
